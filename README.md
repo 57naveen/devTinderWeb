@@ -13,3 +13,7 @@
 - cors - install cors in backend => add middleware to with configurations: orgin, credentials: true
 - whenever you're making API call so pass axios => {withCredentials:true}
 - install react-redux +  @reduxjs/toolkit 
+- Login and see if your data is coming properly in the store
+- NavBar should update as soon as user logs in 
+- you should not be access other routes without login 
+- if token is not present, redirect user to login page 
