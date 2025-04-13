@@ -10,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("Test@123");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [error,setError] = useState("");
 
   const handelLogin = async () => {
 
@@ -23,12 +24,13 @@ const Login = () => {
       dispatch(addUser(res.data));
       navigate("/feed")
     } catch (error) {
-      console.error(error);
+      setError(error?.response?.data || "Something went wrong")
+      
     }
   };
 
   return (
-    <div className="my-40 flex justify-center items-center">
+    <div className="my-20 flex justify-center items-center">
       <div className="card bg-neutral text-neutral-content w-96">
         <div className="card-body items-center text-center">
           <h2 className="card-title">Login</h2>
@@ -107,6 +109,8 @@ const Login = () => {
               <br />
               At least one uppercase letter
             </p>
+
+            <p className="text-red-500 m-3">{error}</p>
           </div>
           <div className="card-actions justify-end mt-5">
             <button className="btn btn-primary" onClick={handelLogin}>Login</button>
