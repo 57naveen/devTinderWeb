@@ -44,10 +44,10 @@ if(connections.length === 0 ) return <h1 className="text-bold text-2xl">No Conne
 
     {
         connections.map((connection) =>{
-            const {firstName,lastName,age,gender,about,photoUrl} = connection
+            const {_id,firstName,lastName,age,gender,about,photoUrl} = connection
 
             return(
-                <div className="flex m-4 p-4 rounded-lg  bg-base-300 w-1/2 mx-auto">
+                <div key={_id} className="flex m-4 p-4 rounded-lg  bg-base-300 w-1/2 mx-auto">
                     <div>
                         <img
                         alt="photo"
