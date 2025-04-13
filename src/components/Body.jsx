@@ -27,7 +27,7 @@ const Body = () => {
         Navigate("/login");
       }
 
-      console.error(error);
+      // console.error(error);
     }
   };
 
