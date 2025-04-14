@@ -66,7 +66,7 @@ if(connections.length === 0 ) return <h1 className="text-bold text-2xl">No Conne
     }
 
 
-    </div>;
+    </div>
   </>
    )
   

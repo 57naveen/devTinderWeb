@@ -40,10 +40,14 @@ const Body = () => {
 
   return (
     <>
-      <NavBar />
-      <Outlet />{" "}
-      {/* This Outlet is used to render the children component inside the parent component */}
-      <Footer />
+      <div className="min-h-screen flex flex-col">
+        <NavBar />
+        <main className="flex-grow">
+          <Outlet />
+          {/* This Outlet is used to render the children component inside the parent component */}
+        </main>
+        <Footer />
+      </div>
     </>
   );
 };
