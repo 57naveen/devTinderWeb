@@ -6,15 +6,17 @@ import {useNavigate}  from "react-router-dom"
 import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
-  const [emailId, setEmailId] = useState("test4@gmail.com");
-  const [password, setPassword] = useState("Test@123");
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
+  const[firstName,setFirstName] = useState("");
+  const[lastName,setLastName] = useState("");
+  const[isLoginForm,setIsLoginForm] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [error,setError] = useState("");
 
   const handelLogin = async () => {
 
-   
     try {
       const res = await axios.post(BASE_URL + "/login", {
         emailId,
@@ -29,12 +31,30 @@ const Login = () => {
     }
   };
 
+  const handelSignup =  async () =>{
+
+    try {
+      const res = await axios.post(BASE_URL + "/signup",{firstName,lastName,emailId,password},{withCredentials:true})
+      dispatch(addUser(res.data.data));
+      return navigate("/profile")
+    } catch (error) {
+      setError(error?.response?.data || "Something went wrong")
+    }
+
+  }
+
   return (
     <div className="my-20 flex justify-center items-center">
       <div className="card bg-neutral text-neutral-content w-96">
         <div className="card-body items-center text-center">
-          <h2 className="card-title">Login</h2>
+          <h2 className="card-title">{isLoginForm? "Login" : "Sign up"}</h2>
           <div>
+            { !isLoginForm && <>
+          <legend className="fieldset-legend">FirstName</legend>
+          <input type="text" placeholder="First Name" className="input" value={firstName}  onChange={(e) => setFirstName(e.target.value)} />
+          <legend className="fieldset-legend">LastName</legend>
+          <input type="text" placeholder="Last Name" className="input" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+          </>}
             <legend className="fieldset-legend">Email ID</legend>
             <label className="input validator">
               <svg
@@ -113,8 +133,10 @@ const Login = () => {
             <p className="text-red-500 m-3">{error}</p>
           </div>
           <div className="card-actions justify-end mt-5">
-            <button className="btn btn-primary" onClick={handelLogin}>Login</button>
+            <button className="btn btn-primary" onClick={isLoginForm? handelLogin : handelSignup}>{isLoginForm? "Login" : "Sign up"}</button>
           </div>
+
+          <p className="mt-5 cursor-pointer" onClick={()=>setIsLoginForm((value)=>!value)}>{isLoginForm? "New user? SignUp Here " : "Existing User? Login Here"}</p>
         </div>
       </div>
     </div>

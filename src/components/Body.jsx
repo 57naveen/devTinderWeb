@@ -13,8 +13,7 @@ const Body = () => {
   const Navigate = useNavigate();
 
   const fetchUser = async () => {
-
-    if(userData) return // if userDate is there then don't make another API call return here
+    if (userData) return; // if userDate is there then don't make another API call return here
 
     try {
       const res = await axios.get(BASE_URL + "/profile/view", {
@@ -31,12 +30,9 @@ const Body = () => {
     }
   };
 
-  useEffect(()=>{
-
+  useEffect(() => {
     fetchUser();
-
-  },[])
-
+  }, []);
 
   return (
     <>
