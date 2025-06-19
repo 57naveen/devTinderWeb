@@ -13,139 +13,134 @@ const EditProfile = ({ user }) => {
   const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
   const [about, setAbout] = useState(user.about || "");
   const [error, setError] = useState("");
-  const dispatch = useDispatch()
-  const [showToast, setShowToast] = useState(false)
+  const [showToast, setShowToast] = useState(false);
+  const dispatch = useDispatch();
 
   const saveProfile = async () => {
-    setError("")
+    setError("");
     try {
       const res = await axios.patch(
-        BASE_URL + "/profile/edit",
+        `${BASE_URL}/profile/edit`,
         { firstName, lastName, photoUrl, age, gender, about },
-        { withCredentials: true } 
+        { withCredentials: true }
       );
-
-      dispatch(addUser(res?.data?.data))
+      dispatch(addUser(res?.data?.data));
       setShowToast(true);
-
-      setTimeout(()=>{
-        setShowToast(false)
-      },3000)
-
-    } catch (error) { 
-      setError(error.response.data);
+      setTimeout(() => setShowToast(false), 3000);
+    } catch (error) {
+      setError(error?.response?.data || "Profile update failed.");
     }
   };
 
   return (
     <>
-     <div className="flex justify-center my-10">
-      <div>
-        <div className="my-10 flex justify-center mx-10  items-center">
-          <div className="card bg-neutral text-neutral-content w-96">
-            <div className="card-body items-center text-center">
-              <h2 className="card-title">Login</h2>
-              <div>
-                <legend className="fieldset-legend">First Name</legend>
-                <label className="input validator">
+      <div className="min-h-screen bg-gray-100 px-6 py-12 ">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
+          {/* Form Section */}
+          <div>
+            <h1 className="text-3xl font-semibold mb-8 text-gray-900 dark:text-white">
+              Update Profile
+            </h1>
+
+            <div className="space-y-6">
+              {[
+                { label: "First Name", value: firstName, setter: setFirstName },
+                { label: "Last Name", value: lastName, setter: setLastName },
+                { label: "Age", value: age, setter: setAge },
+                { label: "Gender", value: gender, setter: setGender },
+                { label: "Photo URL", value: photoUrl, setter: setPhotoUrl },
+                { label: "About", value: about, setter: setAbout },
+              ].map((field, index) => (
+                <div key={index}>
+                  <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
+                    {field.label}
+                  </label>
                   <input
                     type="text"
-                    placeholder=""
-                    required
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    className="w-70"
+                    value={field.value}
+                    onChange={(e) => field.setter(e.target.value)}
+                    className="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white"
+                    placeholder={`Enter ${field.label.toLowerCase()}`}
                   />
-                </label>
+                </div>
+              ))}
+
+              {error && <p className="text-red-500 text-sm">{error}</p>}
+
+              <button
+                onClick={saveProfile}
+                className="mt-4 px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800 transition-all"
+              >
+                Save Profile
+              </button>
+            </div>
+          </div>
+
+          {/* Live Profile Preview */}
+          <div className="mt-10 md:mt-0">
+            <h2 className="text-xl font-semibold mb-4 ml-15 text-gray-900 dark:text-white">
+              Live Preview
+            </h2>
+            {/* <UserCards
+              user={{ firstName, lastName, photoUrl, age, gender, about }}
+            /> */}
+            <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 w-full max-w-md mx-auto">
+              <div className="flex items-center space-x-4">
+                <img
+                  src={photoUrl || "https://via.placeholder.com/100"}
+                  alt="Profile"
+                  className="w-20 h-20 object-cover rounded-full border-2 border-gray-300 dark:border-gray-600"
+                />
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+                    {firstName} {lastName}
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-300">
+                    {gender || "Not specified"} •{" "}
+                    {age ? `${age} years old` : "Age not set"}
+                  </p>
+                </div>
               </div>
-              <div>
-                <legend className="fieldset-legend">Last Name</legend>
-                <label className="input validator">
-                  <input
-                    type="text"
-                    required
-                    placeholder=""
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    className="w-70"
-                  />
-                </label>
+
+              <div className="mt-4">
+                <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                  About
+                </h4>
+                <p className="text-gray-700 dark:text-gray-200 text-sm">
+                  {about || "No bio provided yet."}
+                </p>
               </div>
-              <div>
-                <legend className="fieldset-legend">Age</legend>
-                <label className="input validator">
-                  <input
-                    type="text"
-                    required
-                    placeholder=""
-                    value={age}
-                    onChange={(e) => setAge(e.target.value)}
-                    className="w-70"
-                  />
-                </label>
-              </div>
-              <div>
-                <legend className="fieldset-legend">Gender</legend>
-                <label className="input validator">
-                  <input
-                    type="text"
-                    required
-                    placeholder=""
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    className="w-70"
-                  />
-                </label>
-              </div>
-              <div>
-                <legend className="fieldset-legend">Photo Url</legend>
-                <label className="input validator">
-                  <input
-                    type="text"
-                    required
-                    placeholder=""
-                    value={photoUrl}
-                    onChange={(e) => setPhotoUrl(e.target.value)}
-                    className="w-70"
-                  />
-                </label>
-              </div>
-              <div>
-                <legend className="fieldset-legend">About</legend>
-                <label className="input validator">
-                  <input
-                    type="text"
-                    required
-                    placeholder=""
-                    value={about}
-                    onChange={(e) => setAbout(e.target.value)}
-                    className="w-70"
-                  />
-                </label>
-              </div>
-              <p className="text-red-500 m-3">{error}</p>
-              <div className="card-actions justify-end mt-2">
-                <button className="btn btn-primary" onClick={saveProfile}>Save Profile</button>
+
+              <div className="absolute top-4 right-4 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-3 py-1 text-xs font-semibold rounded-full">
+                Preview
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="my-10">
-        <UserCards
-          user={{ firstName, lastName, photoUrl, age, gender, about }}
-        />
-      </div>
-    </div>
-    
-  {showToast &&  <div className="toast toast-top toast-center">
-  <div className="alert alert-success">
-    <span>Profile updated</span>
-  </div>
-  </div> }
-   
+
+      {/* Toast Message */}
+      {showToast && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-md animate-toast">
+            Profile updated!
+          </div>
+        </div>
+      )}
+
+      {/* Toast animation */}
+      <style>
+        {`
+          @keyframes toast {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+          .animate-toast {
+            animation: toast 0.3s ease-out;
+          }
+        `}
+      </style>
     </>
-   
   );
 };
 

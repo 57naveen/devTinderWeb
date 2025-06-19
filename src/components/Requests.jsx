@@ -24,7 +24,7 @@ const Requests = () => {
       const res = await axios.post(
         BASE_URL + "/request/review/" + status + "/" + _id,
         {},
-        { withCredentials: true }
+        { withCredentials: true }   
       );
 
     // Remove the reviewed request from the state
