@@ -43,56 +43,59 @@ const Requests = () => {
 
   if (requests.length === 0)
     return (
-      <h1 className="flex justify-center my-10 text-bold text-2xl">No Connections Requests found</h1>
+      <h1 className="flex justify-center my-10 text-bold text-2xl text-black">No Connections Requests found</h1>
     );
 
   return (
-    <>
-      <div className="text-center my-10">
-        <h1 className="text-bold text-2xl">Connections Requests</h1>
+    <div className="text-center my-10 px-4">
+  <h1 className="text-3xl font-bold mb-6 text-black">Connection Requests</h1>
 
-        {requests.map((request) => {
-          const { _id, firstName, lastName, age, gender, about, photoUrl } =
-            request.fromUserId;
+  <div className="flex flex-col gap-6 max-w-3xl mx-auto">
+    {requests.map((request) => {
+      const { _id, firstName, lastName, age, gender, about, photoUrl } =
+        request.fromUserId;
 
-          return (
-            <div
-              key={_id}
-              className="flex justify-between items-center m-4 p-4 rounded-lg  bg-base-300 w-2/3 mx-auto"
+      return (
+        <div
+          key={_id}
+          className="bg-base-200 rounded-lg shadow-lg p-4 flex flex-col md:flex-row items-center justify-between gap-4"
+        >
+          {/* Left: Profile Picture */}
+          <img
+            className="w-20 h-20 rounded-full object-cover border-2 border-primary"
+            src={photoUrl}
+            alt="User"
+          />
+
+          {/* Middle: User Info */}
+          <div className="text-left flex-1">
+            <h2 className="text-xl font-semibold text-white">
+              {firstName} {lastName}
+            </h2>
+            <p className="text-gray-300">{age && gender && `${age}, ${gender}`}</p>
+            {about && <p className="text-gray-400 text-sm mt-1">{about}</p>}
+          </div>
+
+          {/* Right: Action Buttons */}
+          <div className="flex gap-2">
+            <button
+              className="btn btn-error btn-sm md:btn-md"
+              onClick={() => reviewRequest("rejected", request._id)}
             >
-              <div>
-                <img
-                  alt="photo"
-                  className="w-20 h-20 rounded-full"
-                  src={photoUrl}
-                />
-              </div>
-              <div className="text-left mx-4">
-                <h2 className="font-bold text-xl">
-                  {firstName + " " + lastName}
-                </h2>
-                {age && gender && <p>{age + "," + gender}</p>}
-                <p>{about}</p>
-              </div>
-              <div>
-                <button
-                  class="btn btn-primary mx-2"
-                  onClick={() => reviewRequest("rejected", request._id)}
-                >
-                  Reject
-                </button>
-                <button
-                  class="btn btn-secondary mx-2"
-                  onClick={() => reviewRequest("accepted", request._id)}
-                >
-                  Accept
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </>
+              Reject
+            </button>
+            <button
+              className="btn btn-success btn-sm md:btn-md"
+              onClick={() => reviewRequest("accepted", request._id)}
+            >
+              Accept
+            </button>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</div>
   );
 };
 

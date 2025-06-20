@@ -1,86 +1,78 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
-import { useDispatch } from "react-redux";
-import { addConnections } from "../utils/connectionSlice";
 import { Link } from "react-router-dom";
-import chat from "/image/chat.png"
+import chat from "/image/chat.png";
 
 const Connection = () => {
-  const dispatch = useDispatch();
-  const [connections,setConnections] = useState([])
+  const [connections, setConnections] = useState([]);
 
   const fetchConnection = async () => {
     try {
       const res = await axios.get(BASE_URL + "/user/connections", {
         withCredentials: true,
       });
-
-    //   console.log(res?.data?.data)
-
-    //  dispatch(addConnections(res?.data?.data));
-
-    setConnections(res?.data?.data)
-
-    
-
+      setConnections(res?.data?.data);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
-
-
 
   useEffect(() => {
     fetchConnection();
   }, []);
 
-if(!connections) return
+  if (!connections || connections.length === 0)
+    return (
+      <h1 className="flex justify-center my-20 text-2xl font-semibold text-gray-700 dark:text-white">
+        No Connections Found
+      </h1>
+    );
 
-if(connections.length === 0 ) return <h1 className=" flex justify-center my-10 text-bold text-2xl">No Connections found</h1>
+  return (
+    <div className="w-full flex justify-center my-12 px-4">
+      <div className="w-full max-w-4xl">
+        <h1 className="text-3xl font-bold text-center mb-10 text-gray-800 dark:text-white">
+          Your Connections
+        </h1>
 
-  return ( 
-  <>
-  <div className="text-center my-10">
-    <h1 className="text-bold text-2xl">Connections</h1>
-
-    {
-        connections.map((connection) =>{
-            const {_id,firstName,lastName,age,gender,about,photoUrl} = connection
-
-            return(
-              <div key={_id} className="flex m-4 p-4 rounded-lg bg-base-300 w-1/2 mx-auto items-center justify-between">
-              {/* Left Side: Image and Info */}
-              <div className="flex items-center">
+        <div className="space-y-6">
+          {connections.map(({ _id, firstName, lastName, age, gender, about, photoUrl }) => (
+            <div
+              key={_id}
+              className="bg-white dark:bg-gray-800 shadow-md rounded-lg flex flex-col sm:flex-row items-center justify-between p-5 transition hover:shadow-lg"
+            >
+              <div className="flex items-center gap-4">
+                <img
+                  className="w-20 h-20 rounded-full object-cover border-2 border-gray-300"
+                  src={photoUrl}
+                  alt={`${firstName} ${lastName}`}
+                />
                 <div>
-                  <img
-                    alt="photo"
-                    className="w-20 h-20 rounded-full"
-                    src={photoUrl}
-                  />
-                </div>
-                <div className="text-left mx-4">
-                  <h2 className="font-bold text-xl">{firstName + " " + lastName}</h2>
-                  {age && gender && <p>{age + ", " + gender}</p>}
-                  <p>{about}</p>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    {firstName} {lastName}
+                  </h2>
+                  {age && gender && (
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">{age}, {gender}</p>
+                  )}
+                  {about && (
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{about}</p>
+                  )}
                 </div>
               </div>
-            
-              {/* Right Side: Chat Button */}
-              <Link to={"/chat/" + _id}>
-                
-                <button className="btn btn-outline btn-success"><span className="w-6 h-6"><img src={chat}/></span>Chat</button>
+
+              <Link to={`/chat/${_id}`} className="mt-4 sm:mt-0">
+                <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-green-600 text-white rounded-md hover:bg-green-500 transition">
+                  <img src={chat} alt="chat" className="w-5 h-5" />
+                  Chat
+                </button>
               </Link>
             </div>
-            )
-        })
-    }
-
-
+          ))}
+        </div>
+      </div>
     </div>
-  </>
-   )
-  
+  );
 };
 
 export default Connection;

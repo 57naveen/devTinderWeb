@@ -24,7 +24,7 @@ const NavBar = () => {
   return (
     <div className="bg-white dark:bg-gray-900 shadow-md w-full px-4 py-3 flex justify-between items-center">
       <Link to="/feed" className="text-2xl font-bold text-black dark:text-white">
-        💘 Dev Tinder
+       Dev Tinder
       </Link>
 
       {user && (
