@@ -1,6 +1,14 @@
-export const BASE_URL = location.hostname === "localhost" ? "http://localhost:5555" : "/api"
+let BASE_URL = "";
 
-// export const BASE_URL =
-//   location.hostname === "localhost"
-//     ? "http://localhost:5555"
-//     : "https://devtinder-backend-mosg.onrender.com";
+if (location.hostname === "localhost") {
+  // Local dev
+  BASE_URL = "http://localhost:5555";
+} else if (location.hostname.includes("onrender.com")) {
+  // Render backend
+  BASE_URL = "https://devtinder-backend-mosg.onrender.com";
+} else {
+  // Default for AWS reverse proxy (Nginx serving /api)
+  BASE_URL = "/api";
+}
+
+export { BASE_URL };
