@@ -10,7 +10,7 @@ export const createSocketConnection = () => {
     });
   } else if (location.hostname === "16.170.231.228") {
     // AWS deployment
-    return io("http://16.170.231.228/api", {
+    return io("http://16.170.231.228", {
       withCredentials: true,
       transports: ["websocket", "polling"],
     });
